@@ -1,9 +1,11 @@
+require('dotenv').config();
+
 module.exports = {
-  username: 'dev',
-  password: '4jAfQ96b7d6P7Kqx',
-  database: 'gympoint',
-  host: 'localhost',
   dialect: 'mysql',
+  host: process.env.DB_HOST,
+  database: process.env.DB_NAME,
+  username: process.env.DB_USER,
+  password: process.env.DB_PASS,
   define: {
     timestamps: true,
     underscored: true,

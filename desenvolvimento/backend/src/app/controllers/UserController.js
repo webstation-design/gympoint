@@ -46,9 +46,9 @@ class UserController {
             return res.status(400).json({ error: 'Password must be between 5 and 15 characters' });
         }
 
-        const userExists = await User.findOne({ where: { email: req.body.email } });
+        const duplicity = await User.findOne({ where: { email: req.body.email } });
 
-        if (userExists) {
+        if (duplicity) {
             return res.status(400).json({ error: 'User already exists' });
         }
 
