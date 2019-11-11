@@ -1,3 +1,4 @@
+import Sequelize from 'sequelize';
 import * as Yup from 'yup';
 
 import Student from '../models/Student';
@@ -6,8 +7,38 @@ class StudentController {
 
   async index(req, res) {
 
+    const { Op } = Sequelize;
+
+    var { search, pageIndex, pageSize } = req.query;
+
+    if (!pageIndex || pageIndex < 1) pageIndex = 1;
+
+    if (!pageSize || pageSize <= 0) pageSize = process.env.PAGE_SIZE;
+
+    var where = [];
+
+    if (search) where.push(Sequelize.or(
+      {
+        name: {
+          [Op.like]: `%${search}%`
+        }
+      },
+      {
+        age: search
+      },
+      {
+        weight: search
+      },
+      {
+        height: search
+      }
+    ));
+
     const students = await Student.findAll({
-      order: ['name']
+      where: Sequelize.and(where),
+      order: ['name'],
+      limit: parseInt(pageSize),
+      offset: (parseInt(pageIndex) - 1) * parseInt(pageSize),
     });
 
     return res.json(students);
